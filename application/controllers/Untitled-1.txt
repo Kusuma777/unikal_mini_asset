@@ -1,0 +1,49 @@
+<?php
+        public function tambahAksi()
+    {
+        $this->_rulesTambah();
+
+        if ($this->form_validation->run() == true) {
+
+            $foto = $_FILES['foto']['name'];
+
+            if (!empty($foto)) {
+
+                $config['upload_path']      = './assets/img/';
+                $config['allowed_types']    = 'jpeg|jpg|png|svg';
+                $config['max_size']         = 3072;
+                $config['file_ext_tolower'] = true;
+                $config['encrypt_name']     = true;
+
+                $this->load->library('upload', $config);
+
+                    if ($this->upload->do_upload('foto')) {
+                    $status_barang = $this->input->post('status_barang') === 'Y' ? '1' : '0';
+                    $photo = $this->upload->data('file_name');
+                    $data = [
+                        'tanggal' => preg_replace('#(\d{2})/(\d{2})/(\d{4})\s(.*)#', '$3-$2-$1 $4', $this->input->post('tanggal')),
+                        'id_unit' => $this->input->post('unit'),
+                        'nama_barang_service' => htmlspecialchars($this->input->post('barang_service', true)),
+                        'keterangan' => htmlspecialchars($this->input->post('keterangan', true)),
+                        'status_barang' => $status_barang,
+                        'keterangan_barang_diganti' => htmlspecialchars($this->input->post('keterangan2', true)),
+                        'foto' => $photo,
+                        'created_at' => date('Y-m-d H:i:s')
+                    ];
+                    $this->service_model->tambahRiwayat($data);
+                    $this->session->set_flashdata('main', 'Unit berhasil ditambahkan');
+                    redirect('service');
+                    } else {
+
+                        $error = $this->upload->display_errors();
+                        $this->tambah($error);
+                    }
+            } else {
+            $this->session->set_flashdata('validasi_foto', 'Pilih foto terlebih dahulu');
+            $this->tambah();
+        }
+        } else {
+
+            $this->tambah();
+        }
+        }
