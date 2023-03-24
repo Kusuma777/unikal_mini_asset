@@ -179,7 +179,7 @@
 				var foto = $('input[name="foto_peminjaman"]').prop('files')[0];
 				var form_data = new FormData();
 				form_data.append("data", $('#tambah_peminjaman').serialize());
-				form_data.append("barang", id_barang);
+				form_data.append("barang", JSON.stringify(id_barang));
 				form_data.append("foto_peminjaman", foto);
 
 				$.ajax({

@@ -128,6 +128,8 @@ class DataPeminjaman extends CI_Controller
 
 			$form_data = $this->input->post('data');
 			$id_barang = $this->input->post('barang');
+			$barang = json_decode($_POST['barang']);
+
 
 			var_dump($id_barang);
 			die;
