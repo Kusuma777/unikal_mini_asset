@@ -80,44 +80,20 @@ class PeminjamanModel extends CI_Model
 
 	public function updateJoin($id)
 	{
-		$this->db->join('barang', 'peminjaman.id_barang = barang.id_barang');
-		$this->db->join('jenis', 'peminjaman.id_jenis = jenis.id_jenis');
+		// $this->db->join('barang', 'peminjaman.id_barang = barang.id_barang');
+		// $this->db->join('jenis', 'peminjaman.id_jenis = jenis.id_jenis');
 		$this->db->where('id_peminjaman', $id);
 		return $this->db->get('peminjaman')->row_array();
 	}
 
-	public function tambahDataAksi()
+	public function tambahDataAksi($data)
 	{
-		$foto1 = $_FILES['foto_peminjaman']['name'];
-		$config['upload_path'] = './assets/foto';
-		$config['allowed_types'] = 'jpg|jpeg|png|svg|tiff';
-		$config['encrypt_name'] = true;
-		$config['max_size'] = 2048;
-
-		$this->load->library('upload', $config);
-
-		if ($this->upload->do_upload('foto_peminjaman', TRUE)) {
-			$foto1 = $this->upload->data('file_name');
-		} else {
-			echo 'Gagal Upload';
-		}
-
-		$data = [
-			'nama_peminjam' => $this->input->post('nama_peminjam', TRUE),
-			'no_telp' => $this->input->post('no_telp', TRUE),
-			'tgl_dipinjam' => $this->input->post('tgl_dipinjam', TRUE),
-			'tgl_pengembalian' => $this->input->post('tgl_pengembalian', TRUE),
-			'status_peminjaman' => '1',
-			'catatan' => $this->input->post('catatan', TRUE),
-			'id_jenis' => $this->input->post('id_jenis', TRUE),
-			'id_barang' => $this->input->post('id_barang', TRUE),
-			'foto_peminjaman' => $foto1
-		];
-
 		$this->db->insert('peminjaman', $data);
+
+		return $this->db->insert_id();
 	}
 
-	public function updateDataAksi()
+	public function updateDataAksi($data)
 	{
 		$foto1 = $_FILES['foto_peminjaman']['name'];
 		$config['upload_path'] = './assets/foto';
@@ -152,10 +128,7 @@ class PeminjamanModel extends CI_Model
 		}
 
 		$data = [
-			'id_barang' => $this->input->post('id_barang', TRUE),
-			'id_jenis' => $this->input->post('id_jenis', TRUE),
 			'status_peminjaman' => $this->input->post('status_peminjaman', TRUE),
-			'tambah' => $this->input->post('tambah', TRUE),
 			'nama_peminjam' => $this->input->post('nama_peminjam', TRUE),
 			'no_telp' => $this->input->post('no_telp', TRUE),
 			'tgl_dipinjam' => $this->input->post('tgl_dipinjam', TRUE),
@@ -165,5 +138,71 @@ class PeminjamanModel extends CI_Model
 
 		$this->db->where('id_peminjaman', $this->input->post('id_peminjaman', TRUE));
 		$this->db->update('peminjaman', $data);
+	}
+
+	public function logById($id)
+	{
+		$this->db->order_by('created_at', 'DESC');
+		return $this->db->get_where('log', ['id_service' => $id])->result_array();
+	}
+
+	public function log_delete($id)
+	{
+
+		$peminjaman = $this->updateJoin($id);
+		$logData = [
+			'id_peminjaman'    => $id,
+			'keterangan'    => $this->session->userdata('username') . " mengahapus data peminjaman " . $peminjaman['nama_peminjam']
+		];
+		$this->db->insert('log', $logData);
+	}
+
+	private function _getDataQueryLog()
+	{
+		$tgl_awal = $this->input->post('awal');
+		$tgl_akhir = $this->input->post('akhir');
+
+		$this->db->from('log');
+
+		if (!empty($tgl_awal)) {
+			$this->db->where('created_at >=', $tgl_awal . " 00:00:00");
+		}
+		if (!empty($tgl_akhir)) {
+			$this->db->where('created_at <=', $tgl_akhir . " 25:60:60");
+		}
+
+		if (isset($_POST['search']['value'])) {
+			$this->db->like('keterangan', $_POST['search']['value']);
+		}
+
+		if (isset($_POST['order'])) {
+
+			$this->db->order_by($this->order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+		} else {
+			$this->db->order_by('created_at', 'DESC');
+		}
+	}
+
+	public function getDataLog()
+	{
+		$this->_getDataQueryLog();
+		if ($_POST['length'] != 1) {
+			$this->db->limit($_POST['length'], $_POST['start']);
+		}
+		$query = $this->db->get()->result();
+		return $query;
+	}
+
+	public function count_filtered_log()
+	{
+		$this->_getDataQueryLog();
+		$query = $this->db->get()->num_rows();
+		return $query;
+	}
+
+	public function count_all_log()
+	{
+		$this->db->from('log');
+		return $this->db->count_all_results();
 	}
 }

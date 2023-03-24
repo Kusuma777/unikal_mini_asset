@@ -9,7 +9,7 @@
 
 					<div class="col-lg-12 mx-auto mt-2 mb-5">
 						<div class="col-lg-12">
-							<a class="btn btn-primary mb-2 float-lg-right" href="<?= base_url('dataJenis/tambahData'); ?>">+ Tambah Data</a>
+							<a class="btn btn-primary mb-2 float-lg-right" href="<?= base_url('dataJenisBarang/tambahData'); ?>">+ Tambah Data</a>
 						</div>
 
 						<div class="col-lg-3 col-sm-6 col-md-3 col-sm-3">
@@ -31,23 +31,6 @@
 										<th>Action</th>
 									</tr>
 								</thead>
-
-								<!-- <tbody>
-								<?php $no = 1;
-								foreach ($jenis as $j) : ?>
-									<tr>
-										<td><?= $no++; ?></td>
-										<td><?= $j['nama_jenis']; ?></td>
-										<td>
-											<center>
-												<a class="text-primary" href="<?= base_url('dataJenisBarang/updateData/') . $j['id_jenis']; ?>"><i class="fas fa-edit"></i></a>
-												|
-												<a class="text-danger tombol-update" href="<?= base_url('dataJenisBarang/delete/') . $j['id_jenis']; ?>"><i class="fas fa-trash-alt"></i></a>
-											</center>
-										</td>
-									</tr>
-								<?php endforeach; ?>
-							</tbody> -->
 							</table>
 						</div>
 					</div>

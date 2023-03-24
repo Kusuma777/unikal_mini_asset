@@ -8,6 +8,7 @@ class DataPeminjaman extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('PeminjamanModel', 'pmodel');
+		$this->load->model('PeminjamanDetailModel', 'pdmodel');
 		if (!$this->session->userdata('username')) {
 			redirect();
 		}
@@ -103,21 +104,63 @@ class DataPeminjaman extends CI_Controller
 
 	public function tambahDataAksi()
 	{
-
 		$this->_rules();
 		if ($this->form_validation->run() == FALSE) {
-
-			$this->tambahData();
-
 			echo json_encode([
 				"status" => 300,
 				"message" => "Data Gagal Disimpan"
 			]);
 		} else {
-			var_dump($this->input->post('data'));
-			var_dump($this->input->post('id_barang'));
+
+			$foto1 =  $_FILES['foto_peminjaman']['name'];
+			$config['upload_path'] = './assets/foto';
+			$config['allowed_types'] = 'jpg|jpeg|png|svg|tiff';
+			$config['encrypt_name'] = true;
+			$config['max_size'] = 2048;
+
+			$this->load->library('upload', $config);
+
+			if ($this->upload->do_upload('foto_peminjaman', TRUE)) {
+				$foto1 = $this->upload->data('file_name');
+			} else {
+				echo 'Gagal Upload';
+			}
+
+			$form_data = $this->input->post('data');
+			$id_barang = $this->input->post('barang');
+
+			var_dump($id_barang);
 			die;
-			$this->pmodel->tambahDataAksi();
+
+			// parse_str($form_data, $form_array);
+
+			// $nama_peminjam = $form_array['nama_peminjam'];
+			// $no_telp = $form_array['no_telp'];
+			// $tgl_dipinjam = $form_array['tgl_dipinjam'];
+			// $tgl_pengenmalian = $form_array['tgl_pengembalian'];
+			// $catatan = $form_array['catatan'];
+
+			// $data = [
+			// 	'nama_peminjam' => $nama_peminjam,
+			// 	'no_telp' => $no_telp,
+			// 	'tgl_dipinjam' => $tgl_dipinjam,
+			// 	'tgl_pengembalian' => $tgl_pengenmalian,
+			// 	'status_peminjaman' => '1',
+			// 	'catatan' => $catatan,
+			// 	'foto_peminjaman' => $foto1
+			// ];
+
+			// $id_peminjaman = $this->pmodel->tambahDataAksi($data);
+
+			// foreach ($id_barang as $key => $val) {
+			// 	$data = [
+			// 		'id_peminjaman' => $id_peminjaman,
+			// 		'id_barang' => $val['id_barang']
+			// 	];
+
+			// 	$this->pdmodel->actionINSERT($data);
+			// }
+
 			echo json_encode([
 				"status" => 200,
 				"message" => "Data Berhasil Disimpan"
@@ -155,16 +198,19 @@ class DataPeminjaman extends CI_Controller
 
 	public function updateDataDetail()
 	{
-		$id = $this->input->post('id_peminjaman_detail');
+		$id = $this->input->post('id');
 
 		$this->_rules();
-		// if( $this->form_validation->run() == FALSE) {
-		// 	$this->detail($id);
-		// } else {
-		$this->pmodel->updateDataAksi();
+		$id = $this->input->post('id_peminjaman');
+		$peminjaman = $this->pmodel->updateJoin($id);
+		$logData = [
+			'id_peminjaman'    => $id,
+			'keterangan'    => " Barang yang dipinjam oleh " . $peminjaman['nama_peminjam'] . " sudah dikembalikan"
+		];
+		$this->db->insert('log', $logData);
+		$this->pmodel->updateDataAksi($id);
 		$this->session->set_flashdata('main', 'Barang sudah dikembalikan');
 		redirect('dataPeminjaman');
-		// }
 	}
 
 	public function detail($id)
@@ -180,11 +226,11 @@ class DataPeminjaman extends CI_Controller
 		$this->load->view('detailPeminjaman/script');
 	}
 
-
 	public function delete()
 	{
 		$id = $this->input->post('id');
 
+		$this->pmodel->log_delete($id);
 		$this->db->delete('peminjaman', ['id_peminjaman' => $id]);
 		$this->session->set_flashdata('main', 'Data berhasil dihapus');
 
@@ -196,23 +242,10 @@ class DataPeminjaman extends CI_Controller
 
 	public function _rules()
 	{
-		$this->form_validation->set_rules('nama_peminjam', 'Nama Peminjam', 'required|trim', [
-			'required' => 'Field nama peminjam harus diisi'
+		$this->form_validation->set_rules('data', 'Data Peminjam', 'required|trim', [
+			'required' => 'Field data peminjam harus diisi'
 		]);
-		$this->form_validation->set_rules('no_telp', 'Nomor Telp/Wa', 'required|trim|min_length[11]', [
-			'required' => 'Field nomor telp/Wa harus diisi',
-			'min_length' => 'Nomor telp/wa terlalu pendek pastikan nomer dengan benar',
-		]);
-		$this->form_validation->set_rules('tgl_dipinjam', 'Tanggal Dipinjam', 'required|trim', [
-			'required' => 'Tanggal dipinjam harus diisi',
-		]);
-		$this->form_validation->set_rules('tgl_pengembalian', 'Tanggal Pengembalian', 'required|trim', [
-			'required' => 'Tanggal pengembalian harus diisi',
-		]);
-		$this->form_validation->set_rules('id_jenis', 'Jenis Barang', 'required|trim', [
-			'required' => 'Field jenis barang harus diisi'
-		]);
-		$this->form_validation->set_rules('id_barang', 'Nama Barang', 'required|trim', [
+		$this->form_validation->set_rules('barang', 'Barang', 'required|trim', [
 			'required' => 'Field nama Barang harus diisi'
 		]);
 	}

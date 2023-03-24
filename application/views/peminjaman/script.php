@@ -1,4 +1,36 @@
 <script>
+	var table;
+	$(document).ready(function() {
+
+		//datatables
+		var table = $('#tablePeminjaman').DataTable({
+
+			"processing": true,
+			"serverSide": true,
+			"order": [],
+
+			"ajax": {
+				"url": "<?= site_url('dataPeminjaman/get_data_peminjaman') ?>",
+				"type": "POST",
+				"data": function(data) {
+					data.status_peminjaman = $('#status').val();
+				}
+			},
+
+			"columnDefs": [{
+				"targets": [0, 2, 5, 6],
+				"orderable": false,
+			}, ],
+
+		});
+
+
+		$("select").on("change", function() {
+			table.ajax.reload();
+		});
+
+	});
+
 	// confirm hapus
 	$('#tablePeminjaman').on('click', '.tombol-hapus', function() {
 
@@ -7,7 +39,7 @@
 
 		Swal.fire({
 			title: 'Apakah anda yakin?',
-			text: "Data peminjaman akan dihapus",
+			text: "Data Peminjaman akan dihapus",
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#d33',
@@ -16,7 +48,6 @@
 		}).then((result) => {
 			if (result.isConfirmed) {
 
-
 				$.ajax({
 					method: 'POST',
 					url: url + 'dataPeminjaman/delete',
@@ -24,12 +55,11 @@
 						id: id
 					},
 					dataType: 'json',
+
 					success: function(data) {
-
-						location.reload();
-
+						location.reload()
 						Toast.fire({
-							icon: data.type,
+							icon: 'success',
 							title: data.text
 						})
 
@@ -38,29 +68,6 @@
 
 			}
 		})
-
-	});
-
-
-	$('.tombol-update').on('click', function(e) {
-
-		e.preventDefault();
-		const href = $(this).attr('href');
-
-		Swal.fire({
-			title: 'Apakah Anda Yakin',
-			text: "Data Akan Dihapus!",
-			icon: 'question',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				document.location.href = href;
-			}
-		});
-
 
 	});
 </script>

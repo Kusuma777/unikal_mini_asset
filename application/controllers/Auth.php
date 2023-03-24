@@ -64,7 +64,7 @@ class Auth extends CI_Controller
 
 			$this->session->set_userdata($data);
 		} else {
-			$this->session->set_flashdata('validasi_login', 'Username atau password salah');
+			$this->session->set_flashdata('validasi_login', '<div class="alert alert-danger" role="alert"> <b>username</b> atau <b>password</b> salah </div>');
 			redirect();
 		}
 	}

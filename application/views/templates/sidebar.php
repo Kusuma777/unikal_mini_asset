@@ -18,7 +18,9 @@
 			<hr class="sidebar-divider my-0">
 
 			<!-- Nav Item - Dashboard -->
-			<li class="nav-item active">
+			<li class="nav-item <?php if ($this->uri->segment(1) == 'dashboard') {
+									echo "active";
+								} ?>">
 				<a class="nav-link" href="<?= base_url('dashboard'); ?>">
 					<i class="fas fa-fw fa-tachometer-alt"></i>
 					<span>Dashboard</span></a>
@@ -31,7 +33,11 @@
 				Admin
 			</div>
 			<!-- Nav Item - Pages Collapse Menu -->
-			<li class="nav-item">
+			<li class="nav-item <?php if ($this->uri->segment(1) == 'dataBarang') {
+									echo "active";
+								} ?> <?php if ($this->uri->segment(1) == 'dataJenisBarang') {
+											echo "active";
+										} ?>">
 				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
 					<i class="fas fa-fw fa-folder-open"></i>
 					<span>Master Data</span>
@@ -45,17 +51,20 @@
 			</li>
 
 			<!-- Nav Item - Utilities Collapse Menu -->
-			<li class="nav-item">
-				<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-					<i class="fas fa-fw fa-dollar-sign"></i>
-					<span>Transaksi</span>
-				</a>
-				<div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item" href="<?= base_url('dataPeminjaman'); ?>">Peminjaman</a>
-						<a class="collapse-item" href="<?= base_url('detailPeminjaman'); ?>">Detail Peminjaman</a>
-					</div>
-				</div>
+			<li class="nav-item <?php if ($this->uri->segment(1) == 'dataPeminjaman') {
+									echo "active";
+								} ?>">
+				<a class="nav-link" href="<?= base_url('dataPeminjaman'); ?>">
+					<i class="fas fa-fw fa-handshake"></i>
+					<span>Peminjaman</span></a>
+			</li>
+
+			<li class="nav-item <?php if ($this->uri->segment(1) == 'log') {
+									echo "active";
+								} ?>">
+				<a class="nav-link" href="<?= base_url('log'); ?>">
+					<i class="fas fa-fw fa-history"></i>
+					<span>Log Activity</span></a>
 			</li>
 
 			<!-- Divider -->

@@ -17,17 +17,16 @@
 	<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
 	<!-- Animated css -->
-	<link rel="stylesheet" href="<?= base_url('assets/alert/animated.css') ?>" />
+	<link rel="stylesheet" href="<?= base_url('assets/alert/js/animated.css') ?>" />
 
 	<link href="<?= base_url('assets/'); ?>css/sb-admin-2.min.css" rel="stylesheet">
 
 	<!-- Jquery -->
-	<script type="text/javascript" src="<?= base_url('assets/'); ?>jquery/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 	<!-- Jquery Validation -->
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
-	<!-- <script type="text/javascript" src="<?= base_url('assets/'); ?>js/dist/jquery.validate.js"></script>
-	<script type="text/javascript" src="<?= base_url('assets/'); ?>js/lib/jquery-1.11.1.js"></script> -->
 
 </head>
 

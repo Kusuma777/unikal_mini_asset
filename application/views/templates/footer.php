@@ -61,121 +61,10 @@
 <script src="<?= base_url('assets/'); ?>alert/js/sweetalert2.all.min.js"></script>
 <script src="<?= base_url('assets/'); ?>alert/js/myscript.js"></script>
 
-<script src="<?php echo base_url('assets/vendor/datatables/jquery.dataTables.min.js') ?>"></script>
-<script src="<?php echo base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js') ?>"></script>
-
-
-<script type="text/javascript">
-	var table;
-	$(document).ready(function() {
-
-		//datatables
-		var table = $('#tableBarang').DataTable({
-
-			"processing": true,
-			"serverSide": true,
-			"order": [],
-
-			"ajax": {
-				"url": "<?= site_url('dataBarang/get_data_barang') ?>",
-				"type": "POST",
-				"data": function(data) {
-					data.id_jenis = $('#jenis').val();
-				}
-			},
-
-			"columnDefs": [{
-					"targets": [0, 1, 7],
-					"orderable": false,
-				},
-				{
-					"targets": [0, 1, 2, 3, 4, 5, 6, 7],
-					"className": 'text-center align-middle'
-				}
-			],
-
-		});
-
-
-		$("select").on("change", function() {
-			table.ajax.reload();
-		});
-
-	});
-</script>
-
-<script type="text/javascript">
-	var table;
-	$(document).ready(function() {
-
-		//datatables
-		var table = $('#tablePeminjaman').DataTable({
-
-			"processing": true,
-			"serverSide": true,
-			"order": [],
-
-			"ajax": {
-				"url": "<?= site_url('dataPeminjaman/get_data_peminjaman') ?>",
-				"type": "POST",
-				"data": function(data) {
-					data.status_peminjaman = $('#status').val();
-				}
-			},
-
-			"columnDefs": [{
-				"targets": [0, 2, 5, 6],
-				"orderable": false,
-			}, ],
-
-		});
-
-
-		$("select").on("change", function() {
-			table.ajax.reload();
-		});
-
-	});
-</script>
-
-<script type="text/javascript">
-	var table;
-	$(document).ready(function() {
-
-		//datatables
-		var table = $('#tableJenis').DataTable({
-
-			"processing": true,
-			"serverSide": true,
-			"order": [],
-
-			"ajax": {
-				"url": "<?= site_url('dataJenisBarang/get_data_jenis') ?>",
-				"type": "POST",
-				"data": function(data) {
-					data.id_jenis = $('#jenis').val();
-				}
-			},
-
-			"columnDefs": [{
-					"targets": [2],
-					"orderable": false,
-				},
-				{
-					"targets": [0, 1, 2],
-					"className": 'text-center align-middle'
-				}
-			],
-
-		});
-
-
-		$("select").on("change", function() {
-			table.ajax.reload();
-		});
-
-	});
-</script>
+<!-- Datatable Serverside -->
+<script src="<?= base_url('assets/jquery/jquery-3.6.0.min.js') ?>"></script>
+<script src="<?= base_url('assets/vendor/datatables/jquery.dataTables.min.js') ?>"></script>
+<script src="<?= base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js') ?>"></script>
 
 <script>
 	// Add the following code if you want the name of the file appear on select
@@ -184,9 +73,6 @@
 		$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
 	});
 </script>
-
-
-
 
 </body>
 

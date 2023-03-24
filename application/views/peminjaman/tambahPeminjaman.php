@@ -166,47 +166,34 @@
 				$(element).removeClass('is-invalid');
 			},
 			submitHandler: function(form) {
-				console.log('success');
-				let id_barang = [];
+				var id_barang = [];
 
-				$('input[name^="id_barang"]').each(function(i) {
+				$('input[name~="id_barang[]"]').each(function(k, v) {
 					id_barang.push({
-						id: $(this).val()
-					})
+						id_barang: $(this).val()
+					});
 				});
 
+				console.log(id_barang)
+
+				var foto = $('input[name="foto_peminjaman"]').prop('files')[0];
 				var form_data = new FormData();
 				form_data.append("data", $('#tambah_peminjaman').serialize());
-				form_data.append("id_barang", id_barang);
-
-				console.log(form_data);
+				form_data.append("barang", id_barang);
+				form_data.append("foto_peminjaman", foto);
 
 				$.ajax({
 					type: 'POST',
-					url: base_url('dataPeminjaman/tambahDataAksi'),
+					url: '<?= base_url('DataPeminjaman/tambahDataAksi') ?>',
 					data: form_data,
 					processData: false,
 					contentType: false,
 					success: function(output) {
-						// if (output.status == 200) {
-						// 	Swal.fire({
-						// 		type: 'success',
-						// 		position: 'top',
-						// 		title: output.message,
-						// 		showConfirmButton: false,
-						// 		timer: 1050,
-						// 	})
-						// } else {
-						// 	Swal.fire({
-						// 		type: 'error',
-						// 		position: 'top',
-						// 		title: output.message,
-						// 		showConfirmButton: false,
-						// 		timer: 1050,
-						// 	})
-						// }
+
 					}
-				});
+				})
+
+
 			}
 		});
 

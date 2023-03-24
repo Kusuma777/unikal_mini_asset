@@ -3,14 +3,14 @@
 	$(document).ready(function() {
 
 		//datatables
-		var table = $('#tableBarang').DataTable({
+		var table = $('#tableJenis').DataTable({
 
 			"processing": true,
 			"serverSide": true,
 			"order": [],
 
 			"ajax": {
-				"url": "<?= site_url('dataBarang/get_data_barang') ?>",
+				"url": "<?= site_url('dataJenisBarang/get_data_jenis') ?>",
 				"type": "POST",
 				"data": function(data) {
 					data.id_jenis = $('#jenis').val();
@@ -18,11 +18,11 @@
 			},
 
 			"columnDefs": [{
-					"targets": [0, 1, 7],
+					"targets": [2],
 					"orderable": false,
 				},
 				{
-					"targets": [0, 1, 2, 3, 4, 5, 6, 7],
+					"targets": [0, 1, 2],
 					"className": 'text-center align-middle'
 				}
 			],
@@ -37,14 +37,14 @@
 	});
 
 	// confirm hapus
-	$('#tableBarang').on('click', '.tombol-hapus', function() {
+	$('#tableJenis').on('click', '.tombol-hapus', function() {
 
 		const url = $(this).data('url');
 		const id = $(this).data('id');
 
 		Swal.fire({
 			title: 'Apakah anda yakin?',
-			text: "Data barang akan dihapus",
+			text: "Jenis barang akan dihapus",
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#d33',
@@ -53,15 +53,16 @@
 		}).then((result) => {
 			if (result.isConfirmed) {
 
+
 				$.ajax({
 					method: 'POST',
-					url: url + 'dataBarang/delete',
+					url: url + 'dataJenisBarang/delete',
 					data: {
 						id: id
 					},
 					dataType: 'json',
-
 					success: function(data) {
+
 						location.reload();
 
 						Toast.fire({

@@ -86,7 +86,31 @@ class DataBarang extends CI_Controller
 		if ($this->form_validation->run() == FALSE) {
 			$this->tambahData();
 		} else {
-			$this->bmodel->tambahDataAksi();
+			// upload foto
+			$foto = $_FILES['file_foto']['name'];
+			$config['upload_path'] = './assets/foto';
+			$config['allowed_types'] = 'jpg|jpeg|png|svg|tiff';
+			$config['encrypt_name'] = true;
+			$config['max_size'] = 2048;
+
+
+			$this->load->library('upload', $config);
+
+			if ($this->upload->do_upload('file_foto', TRUE)) {
+				$foto = $this->upload->data('file_name');
+			} else {
+				echo 'Gagal Upload';
+			}
+
+			$data = [
+				'id_jenis' => $this->input->post('id_jenis', TRUE),
+				'nama_barang' => $this->input->post('nama_barang', TRUE),
+				'status' => 'tersedia',
+				'stok' => $this->input->post('stok', TRUE),
+				'keterangan' => $this->input->post('keterangan', TRUE),
+				'file_foto' => $foto
+			];
+			$this->bmodel->tambahDataAksi($data);
 
 			$this->session->set_flashdata('main', 'Data berhasil ditambahkan');
 			redirect('dataBarang');
@@ -114,7 +138,35 @@ class DataBarang extends CI_Controller
 		if ($this->form_validation->run() == FALSE) {
 			$this->updateData($id);
 		} else {
-			$this->bmodel->updateDataAksi();
+			$foto = $_FILES['file_foto']['name'];
+			if ($foto) {
+				$config['upload_path'] = './assets/foto';
+				$config['allowed_types'] = 'jpg|jpeg|png|svg|tiff';
+				$config['encrypt_name'] = true;
+				$config['max_size'] = 2048;
+
+				$this->load->library('image_lib', $config);
+				$this->image_lib->resize();
+				$this->load->library('upload', $config);
+
+				if ($this->upload->do_upload('file_foto')) {
+					$foto = $this->upload->data('file_name');
+					$this->db->set('file_foto', $foto);
+				} else {
+					echo $this->upload->display_errors();
+				}
+			}
+
+			$data = [
+				'id_jenis' => $this->input->post('id_jenis', TRUE),
+				'nama_barang' => $this->input->post('nama_barang', TRUE),
+				'status' => 'Tersedia',
+				'stok' => $this->input->post('stok', TRUE),
+				'keterangan' => $this->input->post('keterangan', TRUE),
+
+			];
+
+			$this->bmodel->updateDataAksi($data);
 
 			$this->session->set_flashdata('main', 'Data berhasil diubah');
 			redirect('dataBarang');

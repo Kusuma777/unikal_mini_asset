@@ -24,6 +24,7 @@ class DataJenisBarang extends CI_Controller
 		$this->load->view('templates/topbar');
 		$this->load->view('jenis/dataJenisBarang', $data);
 		$this->load->view('templates/footer');
+		$this->load->view('jenis/script');
 	}
 
 	public function get_data_jenis()
@@ -35,9 +36,9 @@ class DataJenisBarang extends CI_Controller
 		foreach ($list as $field) {
 
 			$action = '<center>
-						<a class="text-primary ml-1"  href="' . base_url('dataJenis/updateData/') . $field->id_jenis . '"><i class="fas fa-edit"></i></a> 
+						<a class="text-primary ml-1"  href="' . base_url('dataJenisBarang/updateData/') . $field->id_jenis . '"><i class="fas fa-edit"></i></a> 
 						|
-						<a class="text-danger tombol-hapus mr-1" data-url="' . base_url() . '" data-id="' . $field->id_jenis . '"><i class="fas fa-trash-alt"></i></a>
+						<a class="text-danger tombol-hapus mx-1" data-url="' . base_url() . '" data-id="' . $field->id_jenis . '"><i class="fas fa-trash-alt"></i></a>
 					</center>';
 
 			$no++;
@@ -85,11 +86,17 @@ class DataJenisBarang extends CI_Controller
 		}
 	}
 
-	public function delete($id)
+	public function delete()
 	{
+		$id = $this->input->post('id');
+
 		$this->db->delete('jenis', ['id_jenis' => $id]);
 		$this->session->set_flashdata('main', 'Data berhasil dihapus');
-		redirect('dataJenisBarang');
+
+		echo json_encode([
+			'alert' => 'dashboard/alert', // url alert
+			'text' => '/Data berhasil dihapus', // text alert
+		]);
 	}
 
 	public function updateData($id)

@@ -93,66 +93,13 @@ class BarangModel extends CI_Model
 		return $this->db->get('barang')->row_array();
 	}
 
-	public function tambahDataAksi()
+	public function tambahDataAksi($data)
 	{
-		// upload foto
-		$foto = $_FILES['file_foto']['name'];
-		$config['upload_path'] = './assets/foto';
-		$config['allowed_types'] = 'jpg|jpeg|png|svg|tiff';
-		$config['encrypt_name'] = true;
-		$config['max_size'] = 2048;
-
-
-		$this->load->library('upload', $config);
-
-		if ($this->upload->do_upload('file_foto', TRUE)) {
-			$foto = $this->upload->data('file_name');
-		} else {
-			echo 'Gagal Upload';
-		}
-
-		$data = [
-			'id_jenis' => $this->input->post('id_jenis', TRUE),
-			'nama_barang' => $this->input->post('nama_barang', TRUE),
-			'status' => 'tersedia',
-			'stok' => $this->input->post('stok', TRUE),
-			'keterangan' => $this->input->post('keterangan', TRUE),
-			'file_foto' => $foto
-		];
-
 		$this->db->insert('barang', $data);
 	}
 
-	public function updateDataAksi()
+	public function updateDataAksi($data)
 	{
-		$foto = $_FILES['file_foto']['name'];
-		if ($foto) {
-			$config['upload_path'] = './assets/foto';
-			$config['allowed_types'] = 'jpg|jpeg|png|svg|tiff';
-			$config['encrypt_name'] = true;
-			$config['max_size'] = 2048;
-
-			$this->load->library('image_lib', $config);
-			$this->image_lib->resize();
-			$this->load->library('upload', $config);
-
-			if ($this->upload->do_upload('file_foto')) {
-				$foto = $this->upload->data('file_name');
-				$this->db->set('file_foto', $foto);
-			} else {
-				echo $this->upload->display_errors();
-			}
-		}
-
-		$data = [
-			'id_jenis' => $this->input->post('id_jenis', TRUE),
-			'nama_barang' => $this->input->post('nama_barang', TRUE),
-			'status' => 'Tersedia',
-			'stok' => $this->input->post('stok', TRUE),
-			'keterangan' => $this->input->post('keterangan', TRUE),
-
-		];
-
 		$this->db->where('id_barang', $this->input->post('id_barang'));
 		$this->db->update('barang', $data);
 	}

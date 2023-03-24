@@ -13,8 +13,7 @@
 				</button>
 
 				<!-- Topbar Title -->
-				<h2>-> </h2>
-				<h2 class="mt-1"> <?= $title; ?></h2>
+				<h2 class="mt-1 text-center text-dark"><b> <?= $title; ?></b></h2>
 
 				<!-- Topbar Navbar -->
 				<ul class="navbar-nav ml-auto">
@@ -27,6 +26,19 @@
 							<span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome <?= $this->session->userdata('username') ?></span>
 							<img class="img-profile rounded-circle" src="<?= base_url('assets/'); ?>img/undraw_profile.svg">
 						</a>
+
+						<!-- Dropdown - User Information -->
+						<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+							<a class="dropdown-item" href="<?= base_url('log') ?>">
+								<i class="fas fa-history fa-sm fa-fw mr-2 text-gray-400"></i>
+								Log Activity
+							</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item btn-logout" href="<?= base_url('auth/logout') ?>">
+								<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+								Logout
+							</a>
+						</div>
 
 					</li>
 

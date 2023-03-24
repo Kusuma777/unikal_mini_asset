@@ -14,11 +14,14 @@ class Dashboard extends CI_Controller
 		if (!$this->session->userdata('username')) {
 			redirect();
 		} else {
-			$data['title'] = 'Dashboard';
 
-			$data['jenis'] = $this->dmodel->getJenis();
-			$data['peminjaman'] = $this->dmodel->getPeminjaman();
-			$data['barang'] = $this->dmodel->getBarang();
+			$data = [
+				'title'   	 => 'Dashboard',
+				'log'		 => $this->_getLog(),
+				'jenis' 	 => $this->dmodel->getjenis(),
+				'peminjaman' => $this->dmodel->getPeminjaman(),
+				'barang'	 => $this->dmodel->getBarang(),
+			];
 
 			$this->load->view('templates/header', $data);
 			$this->load->view('templates/sidebar');
@@ -27,6 +30,7 @@ class Dashboard extends CI_Controller
 			$this->load->view('templates/footer');
 		}
 	}
+
 
 	public function alert($text, $location)
 	{
@@ -38,5 +42,12 @@ class Dashboard extends CI_Controller
 		} else {
 			redirect('alert/' . $text . '/' . $location);
 		}
+	}
+
+	private function _getLog()
+	{
+		$this->db->order_by('created_at', 'DESC');
+		$this->db->limit(10);
+		return $this->db->get('log')->result_array();
 	}
 }
